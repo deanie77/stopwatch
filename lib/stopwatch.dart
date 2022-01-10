@@ -9,16 +9,9 @@ class StopWatch extends StatefulWidget {
 }
 
 class _StopWatchState extends State<StopWatch> {
-  late int seconds;
+  int seconds = 0;
   late Timer timer;
-
-  @override
-  void initState() {
-    super.initState();
-
-    seconds = 0;
-    timer = Timer.periodic(const Duration(seconds: 1), _onTick);
-  }
+  bool isTicking = true;
 
   void _onTick(Timer time) {
     setState(() {
@@ -41,36 +34,54 @@ class _StopWatchState extends State<StopWatch> {
             '$seconds ${_secondsText()}',
             style: Theme.of(context).textTheme.headline5,
           ),
-          const SizedBox(height: 20,),
+          const SizedBox(
+            height: 20,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               ElevatedButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty
-                  .all<Color>(Colors.green),
-                  foregroundColor: MaterialStateProperty
-                  .all<Color>(Colors.white),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.green),
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
                 ),
                 child: const Text('Start'),
-                onPressed: null,
+                onPressed: isTicking ? null : _startTimer,
               ),
               const SizedBox(width: 20),
               TextButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty
-                  .all<Color>(Colors.red),
-                  foregroundColor: MaterialStateProperty
-                  .all<Color>(Colors.white),
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
                 ),
                 child: const Text('Stop'),
-                onPressed: null,
+                onPressed: isTicking ? _stopTimer : null,
               ),
             ],
           ),
         ],
       ),
     );
+  }
+
+  void _startTimer() {
+    timer = Timer.periodic(const Duration(seconds: 1), _onTick);
+
+    setState(() {
+      seconds = 0;
+      isTicking = true;
+    });
+  }
+
+  void _stopTimer() {
+    timer.cancel();
+
+    setState(() {
+      isTicking = false;
+    });
   }
 
   @override
