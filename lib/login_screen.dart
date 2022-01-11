@@ -14,6 +14,18 @@ class _LoginScreenState extends State<LoginScreen> {
   bool loggedIn = false;
   late String name;
 
+  void _validate() {
+    final form = _formKey.currentState;
+    if (!form!.validate()) {
+      return;
+    }
+
+    setState(() {
+      loggedIn = true;
+      name = _nameController.text;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,6 +79,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   return 'Enter a valid email';
                 }
               },
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(
+              child: Text('Continue'),
+              onPressed: _validate,
             ),
           ],
         ),
